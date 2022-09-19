@@ -24,3 +24,6 @@ obj/*.o
 obj/*.a
 include/CL
 tools/luks_tests
+
+hashcat.hcstat2
+*.txt

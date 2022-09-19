@@ -1,0 +1,21 @@
+{
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "Build Debug",
+			"command": "make -f ${workspaceFolder}/Makefile DEBUG=1",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": [
+				"$gcc"
+			]
+		},
+	],
+	"version": "2.0.0"
+}
