@@ -42,6 +42,7 @@ typedef struct pdf14_tmp {
 } pdf14_tmp_t;
 
 KERNEL_FQ void m99998_init(KERN_ATTR_TMPS_ESALT(pdf14_tmp_t, pdf_t)) {
+  
   /**
    * base
    */
@@ -51,6 +52,146 @@ KERNEL_FQ void m99998_init(KERN_ATTR_TMPS_ESALT(pdf14_tmp_t, pdf_t)) {
 
   if (gid >= GID_CNT)
     return;
+  
+  ///////////////////////////////////////////////
+  
+  u32 md5_input[8];
+  md5_input[0] = pws[gid].i[0];
+  md5_input[1] = pws[gid].i[1];
+  md5_input[2] = pws[gid].i[2];
+  md5_input[3] = pws[gid].i[3];
+  md5_input[4] = pws[gid].i[4];
+  md5_input[5] = pws[gid].i[5];
+  md5_input[6] = pws[gid].i[6];
+  md5_input[7] = pws[gid].i[7];
+
+  printf("\nmd5 input: \n");
+  for (u32 i = 0; i < 8; i++) {
+    printf("%8.X\n", md5_input[i]);
+  }
+  printf("\n");
+
+  md5_ctx_t ctx;
+  md5_init(&ctx);
+
+  printf("\nmd5 ctx.w0: ");
+  for (u32 i = 0; i < 4; i++) {
+    printf("%8.X ", ctx.w0[i]);
+  }
+  printf("\nmd5 ctx.w1: ");
+  for (u32 i = 0; i < 4; i++) {
+    printf("%8.X ", ctx.w1[i]);
+  }
+  printf("\nmd5 ctx.w2: ");
+  for (u32 i = 0; i < 4; i++) {
+    printf("%8.X ", ctx.w2[i]);
+  }
+  printf("\nmd5 ctx.w3: ");
+  for (u32 i = 0; i < 4; i++) {
+    printf("%8.X ", ctx.w3[i]);
+  }
+
+  md5_update(&ctx, md5_input, pws[gid].pw_len);
+
+  
+  printf("\nmd5 ctx.w0: ");
+  for (u32 i = 0; i < 4; i++) {
+    printf("%8.X ", ctx.w0[i]);
+  }
+  printf("\nmd5 ctx.w1: ");
+  for (u32 i = 0; i < 4; i++) {
+    printf("%8.X ", ctx.w1[i]);
+  }
+  printf("\nmd5 ctx.w2: ");
+  for (u32 i = 0; i < 4; i++) {
+    printf("%8.X ", ctx.w2[i]);
+  }
+  printf("\nmd5 ctx.w3: ");
+  for (u32 i = 0; i < 4; i++) {
+    printf("%8.X ", ctx.w3[i]);
+  }
+  
+  md5_final(&ctx);
+
+  u32 md5_result[4];
+  md5_result[0] = ctx.h[DGST_R0];
+  md5_result[1] = ctx.h[DGST_R1];
+  md5_result[2] = ctx.h[DGST_R2];
+  md5_result[3] = ctx.h[DGST_R3];
+
+  printf("\nmd5 result: ");
+  for (u32 i = 0; i < 4; i++) {
+    printf("%8.X ", md5_result[i]);
+  }
+
+  unsigned char hex[38] = "flag{";
+  for (u32 i = 0; i < 4; i++) {
+    u32 tmp = md5_result[i];
+    u32 idx = i * 8 + 5;
+    for (u32 j = 0; j < 8; j++) {
+      hex[idx + j] = tmp % 0x10;
+      switch (hex[idx + j]) {
+        case 0x0a: hex[idx + j] = 0x61; break;
+        case 0x0b: hex[idx + j] = 0x62; break;
+        case 0x0c: hex[idx + j] = 0x63; break;
+        case 0x0d: hex[idx + j] = 0x64; break;
+        case 0x0e: hex[idx + j] = 0x65; break;
+        case 0x0f: hex[idx + j] = 0x66; break;
+        default: hex[idx + j] = 0x30 + hex[idx + j]; 
+      }
+      tmp = tmp / 0x10;
+    }
+    for (u32 k=idx; k < idx + 8; k=k+2) {
+      unsigned char t = hex[k + 1];
+      hex[k + 1] = hex[k];
+      hex[k] = t;
+    }
+    printf("\nhex: ");
+    for (u32 i = 0; i < 32; i++) {
+      printf("%2.X ", hex[i]);
+    }
+    
+  }
+  hex[31] = '}';
+  hex[32] = 0;
+  hex[33] = 0;
+  hex[34] = 0;
+  hex[35] = 0;
+  u32 hex_str[8];
+  hex_str[0] = ((u32)hex[3] << 24) + ((u32)hex[2] << 16) + ((u32)hex[1] << 8) + ((u32)hex[0]);
+  hex_str[1] = ((u32)hex[7] << 24) + ((u32)hex[6] << 16) + ((u32)hex[5] << 8) + ((u32)hex[4]);
+  hex_str[2] = ((u32)hex[11] << 24) + ((u32)hex[10] << 16) + ((u32)hex[9] << 8) + ((u32)hex[8]);
+  hex_str[3] = ((u32)hex[15] << 24) + ((u32)hex[14] << 16) + ((u32)hex[13] << 8) + ((u32)hex[12]);
+  hex_str[4] = ((u32)hex[19] << 24) + ((u32)hex[18] << 16) + ((u32)hex[17] << 8) + ((u32)hex[16]);
+  hex_str[5] = ((u32)hex[23] << 24) + ((u32)hex[22] << 16) + ((u32)hex[21] << 8) + ((u32)hex[20]);
+  hex_str[6] = ((u32)hex[27] << 24) + ((u32)hex[26] << 16) + ((u32)hex[25] << 8) + ((u32)hex[24]);
+  hex_str[7] = ((u32)hex[31] << 24) + ((u32)hex[30] << 16) + ((u32)hex[29] << 8) + ((u32)hex[28]);
+  printf("\nhex_str: %s", hex_str);
+  printf("\nhex_str: ", hex_str);
+  for (u32 i = 0; i < 8; i++) {
+    printf("%8.X ", hex_str[i]);
+  }
+  printf("\n");
+  printf("\npws[gid]: %s", pws[gid].i);
+
+
+  pws[gid].i[0] = (u32) hex_str[0];
+  pws[gid].i[1] = (u32) hex_str[1];
+  pws[gid].i[2] = (u32) hex_str[2];
+  pws[gid].i[3] = (u32) hex_str[3];
+  pws[gid].i[4] = (u32) hex_str[4];
+  pws[gid].i[5] = (u32) hex_str[5];
+  pws[gid].i[6] = (u32) hex_str[6];
+  pws[gid].i[7] = (u32) hex_str[7];
+  pws[gid].pw_len = 32;
+
+  printf("\npws[gid]: ");
+  for (u32 i = 0; i < 8; i++) {
+    printf("%8.X ", pws[gid].i[i]);
+  }
+  printf("\n");
+  ////////////////////////////////////////////
+
 
   u32 w0[4];
 
@@ -67,109 +208,14 @@ KERNEL_FQ void m99998_init(KERN_ATTR_TMPS_ESALT(pdf14_tmp_t, pdf_t)) {
   w1[3] = pws[gid].i[7];
 
   printf("\nKernal testing!\n");
-  printf("candidate: %s", w0);
-  printf(" * %s\n", w1);
-  printf("candidate length: %d\n", pws[gid].pw_len);
-
-  u32 md5_input[8];
-  md5_input[0] = pws[gid].i[0];
-  md5_input[1] = pws[gid].i[1];
-  md5_input[2] = pws[gid].i[2];
-  md5_input[3] = pws[gid].i[3];
-  md5_input[4] = pws[gid].i[4];
-  md5_input[5] = pws[gid].i[5];
-  md5_input[6] = pws[gid].i[6];
-  md5_input[7] = pws[gid].i[7];
-
-  printf("\nmd5 input: \n");
-  for (u32 i = 0; i < 8; i++) {
-    printf("%8.X\n", md5_input[i]);
-  }
-  printf("\n");
-  printf("\nmd5 input: %s", md5_input);
-
-  md5_ctx_t ctx;
-  md5_init(&ctx);
-  
-  printf("init md5 hash: \n");
-  printf("\nw0: \n");
+  printf("\candidate: ", hex_str);
   for (u32 i = 0; i < 4; i++) {
-    printf("%8.X\n", ctx.w0[i]);
+    printf("%8.X ", w0[i]);
   }
-  printf("\nw1: \n");
   for (u32 i = 0; i < 4; i++) {
-    printf("%8.X\n", ctx.w1[i]);
+    printf("%8.X ", w1[i]);
   }
-  printf("\nw2: \n");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X\n", ctx.w2[i]);
-  }
-  printf("\nw3: \n");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X\n", ctx.w3[i]);
-  }
-  
-  md5_update(&ctx, md5_input, 7);
-  
-  printf("\nbefore md5 hash: \n");
-  printf("\nw0: \n");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X\n", ctx.w0[i]);
-  }
-  printf("\nw1: \n");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X\n", ctx.w1[i]);
-  }
-  printf("\nw2: \n");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X\n", ctx.w2[i]);
-  }
-  printf("\nw3: \n");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X\n", ctx.w3[i]);
-  }
-
-  printf("\nctx.h: ");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X ", ctx.h[i]);
-  }
-
-  md5_final(&ctx);
-
-  u32 md5_result[4];
-  md5_result[0] = ctx.h[DGST_R0];
-  md5_result[1] = ctx.h[DGST_R1];
-  md5_result[2] = ctx.h[DGST_R2];
-  md5_result[3] = ctx.h[DGST_R3];
-
-  printf("after md5 hash: \n");
-  printf("\nctx.h: ");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X ", ctx.h[i]);
-  }
-
-  printf("\nw0: \n");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X\n", ctx.w0[i]);
-  }
-  printf("\nw1: \n");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X\n", ctx.w1[i]);
-  }
-  printf("\nw2: \n");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X\n", ctx.w2[i]);
-  }
-  printf("\nw3: \n");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X\n", ctx.w3[i]);
-  }
-
-  printf("\nmd5 result: ");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X ", md5_result[i]);
-  }
-  printf("\n");
+  printf("\ncandidate length: %d\n", pws[gid].pw_len);
 
   const u32 pw_len = pws[gid].pw_len;
 
@@ -322,7 +368,7 @@ KERNEL_FQ void m99998_init(KERN_ATTR_TMPS_ESALT(pdf14_tmp_t, pdf_t)) {
   tmps[gid].out[2] = 0;
   tmps[gid].out[3] = 0;
 
-  /*
+  
     printf("\ndigest: ");
     for (u32 i = 0; i < 4; i++) {
       printf("%8.X ", tmps[gid].digest[i]);
@@ -333,7 +379,7 @@ KERNEL_FQ void m99998_init(KERN_ATTR_TMPS_ESALT(pdf14_tmp_t, pdf_t)) {
       printf("%8.X ", tmps[gid].out[i]);
     }
     printf("\n");
-    */
+  
 }
 
 KERNEL_FQ void m99998_loop(KERN_ATTR_TMPS_ESALT(pdf14_tmp_t, pdf_t)) {

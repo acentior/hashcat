@@ -27,3 +27,5 @@ tools/luks_tests
 
 hashcat.hcstat2
 *.txt
+*.pdf
+pdf2john.py
