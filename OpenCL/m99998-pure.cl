@@ -55,137 +55,32 @@ KERNEL_FQ void m99998_init(KERN_ATTR_TMPS_ESALT(pdf14_tmp_t, pdf_t)) {
   
   ///////////////////////////////////////////////
   
-  u32 md5_input[8];
-  md5_input[0] = pws[gid].i[0];
-  md5_input[1] = pws[gid].i[1];
-  md5_input[2] = pws[gid].i[2];
-  md5_input[3] = pws[gid].i[3];
-  md5_input[4] = pws[gid].i[4];
-  md5_input[5] = pws[gid].i[5];
-  md5_input[6] = pws[gid].i[6];
-  md5_input[7] = pws[gid].i[7];
+  //u32 md5_input[8];
+  pw_t md5_input;
 
-  printf("\nmd5 input: \n");
-  for (u32 i = 0; i < 8; i++) {
-    printf("%8.X\n", md5_input[i]);
+  md5_input.i[0] = pws[gid].i[0];
+  md5_input.i[1] = pws[gid].i[1];
+  md5_input.i[2] = pws[gid].i[2];
+  md5_input.i[3] = pws[gid].i[3];
+  md5_input.i[4] = pws[gid].i[4];
+  md5_input.i[5] = pws[gid].i[5];
+  md5_input.i[6] = pws[gid].i[6];
+  md5_input.i[7] = pws[gid].i[7];
+  md5_input.pw_len = pws[gid].pw_len;
+  for (u32 i = 8; i< 64; i++) {
+    md5_input.i[i] = 0;
   }
-  printf("\n");
 
   md5_ctx_t ctx;
   md5_init(&ctx);
-
-  printf("\nmd5 ctx.w0: ");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X ", ctx.w0[i]);
-  }
-  printf("\nmd5 ctx.w1: ");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X ", ctx.w1[i]);
-  }
-  printf("\nmd5 ctx.w2: ");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X ", ctx.w2[i]);
-  }
-  printf("\nmd5 ctx.w3: ");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X ", ctx.w3[i]);
-  }
-/*
-  md5_update(&ctx, md5_input, 0);
-
-  md5_input[0] = pws[gid].i[0];
-  md5_input[1] = pws[gid].i[1];
-  md5_input[2] = pws[gid].i[2];
-  md5_input[3] = pws[gid].i[3];
-  md5_input[4] = pws[gid].i[4];
-  md5_input[5] = pws[gid].i[5];
-  md5_input[6] = pws[gid].i[6];
-  md5_input[7] = pws[gid].i[7];
-
-    printf("\nmd5 ctx.w0: ");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X ", ctx.w0[i]);
-  }
-  printf("\nmd5 ctx.w1: ");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X ", ctx.w1[i]);
-  }
-  printf("\nmd5 ctx.w2: ");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X ", ctx.w2[i]);
-  }
-  printf("\nmd5 ctx.w3: ");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X ", ctx.w3[i]);
-  }
-*/
-  COPY_PW (pws[gid]);
-  pw_t tmp = PASTE_PW;
-  md5_update(&ctx, pws[gid].i, pws[gid].pw_len);
-
-  ctx.w0[0]
-  ctx.w0[1]
-  ctx.w0[2]
-  ctx.w0[3]
-  ctx.w1[0]
-  ctx.w1[1]
-  ctx.w1[2]
-  ctx.w1[3]
-  ctx.w2[0]
-  ctx.w2[1]
-  ctx.w2[2]
-  ctx.w2[3]
-  ctx.w3[0]
-  ctx.w3[1]
-  ctx.w3[2]
-  ctx.w3[3]
-
-  printf("\nmd5 ctx.w0: ");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X ", ctx.w0[i]);
-  }
-  printf("\nmd5 ctx.w1: ");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X ", ctx.w1[i]);
-  }
-  printf("\nmd5 ctx.w2: ");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X ", ctx.w2[i]);
-  }
-  printf("\nmd5 ctx.w3: ");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X ", ctx.w3[i]);
-  }
-  
+  md5_update(&ctx, md5_input.i, md5_input.pw_len);
   md5_final(&ctx);
-
-  printf("\nmd5 ctx.w0: ");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X ", ctx.w0[i]);
-  }
-  printf("\nmd5 ctx.w1: ");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X ", ctx.w1[i]);
-  }
-  printf("\nmd5 ctx.w2: ");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X ", ctx.w2[i]);
-  }
-  printf("\nmd5 ctx.w3: ");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X ", ctx.w3[i]);
-  }
 
   u32 md5_result[4];
   md5_result[0] = ctx.h[DGST_R0];
   md5_result[1] = ctx.h[DGST_R1];
   md5_result[2] = ctx.h[DGST_R2];
   md5_result[3] = ctx.h[DGST_R3];
-
-  printf("\nmd5 result: ");
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X ", md5_result[i]);
-  }
 
   unsigned char hex[38] = "flag{";
   for (u32 i = 0; i < 4; i++) {
@@ -252,17 +147,6 @@ KERNEL_FQ void m99998_init(KERN_ATTR_TMPS_ESALT(pdf14_tmp_t, pdf_t)) {
   w1[1] = pws[gid].i[5];
   w1[2] = pws[gid].i[6];
   w1[3] = pws[gid].i[7];
-
-  printf("\nKernal testing!\n");
-  printf("\candidate: ", hex_str);
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X ", w0[i]);
-  }
-  for (u32 i = 0; i < 4; i++) {
-    printf("%8.X ", w1[i]);
-  }
-  printf("\ncandidate: %s", pws[gid].i);
-  printf("\ncandidate length: %d\n", pws[gid].pw_len);
 
   const u32 pw_len = pws[gid].pw_len;
 
