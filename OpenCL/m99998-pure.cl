@@ -90,10 +90,56 @@ KERNEL_FQ void m99998_init(KERN_ATTR_TMPS_ESALT(pdf14_tmp_t, pdf_t)) {
   for (u32 i = 0; i < 4; i++) {
     printf("%8.X ", ctx.w3[i]);
   }
+/*
+  md5_update(&ctx, md5_input, 0);
 
-  md5_update(&ctx, md5_input, pws[gid].pw_len);
+  md5_input[0] = pws[gid].i[0];
+  md5_input[1] = pws[gid].i[1];
+  md5_input[2] = pws[gid].i[2];
+  md5_input[3] = pws[gid].i[3];
+  md5_input[4] = pws[gid].i[4];
+  md5_input[5] = pws[gid].i[5];
+  md5_input[6] = pws[gid].i[6];
+  md5_input[7] = pws[gid].i[7];
 
-  
+    printf("\nmd5 ctx.w0: ");
+  for (u32 i = 0; i < 4; i++) {
+    printf("%8.X ", ctx.w0[i]);
+  }
+  printf("\nmd5 ctx.w1: ");
+  for (u32 i = 0; i < 4; i++) {
+    printf("%8.X ", ctx.w1[i]);
+  }
+  printf("\nmd5 ctx.w2: ");
+  for (u32 i = 0; i < 4; i++) {
+    printf("%8.X ", ctx.w2[i]);
+  }
+  printf("\nmd5 ctx.w3: ");
+  for (u32 i = 0; i < 4; i++) {
+    printf("%8.X ", ctx.w3[i]);
+  }
+*/
+  COPY_PW (pws[gid]);
+  pw_t tmp = PASTE_PW;
+  md5_update(&ctx, pws[gid].i, pws[gid].pw_len);
+
+  ctx.w0[0]
+  ctx.w0[1]
+  ctx.w0[2]
+  ctx.w0[3]
+  ctx.w1[0]
+  ctx.w1[1]
+  ctx.w1[2]
+  ctx.w1[3]
+  ctx.w2[0]
+  ctx.w2[1]
+  ctx.w2[2]
+  ctx.w2[3]
+  ctx.w3[0]
+  ctx.w3[1]
+  ctx.w3[2]
+  ctx.w3[3]
+
   printf("\nmd5 ctx.w0: ");
   for (u32 i = 0; i < 4; i++) {
     printf("%8.X ", ctx.w0[i]);
@@ -112,6 +158,23 @@ KERNEL_FQ void m99998_init(KERN_ATTR_TMPS_ESALT(pdf14_tmp_t, pdf_t)) {
   }
   
   md5_final(&ctx);
+
+  printf("\nmd5 ctx.w0: ");
+  for (u32 i = 0; i < 4; i++) {
+    printf("%8.X ", ctx.w0[i]);
+  }
+  printf("\nmd5 ctx.w1: ");
+  for (u32 i = 0; i < 4; i++) {
+    printf("%8.X ", ctx.w1[i]);
+  }
+  printf("\nmd5 ctx.w2: ");
+  for (u32 i = 0; i < 4; i++) {
+    printf("%8.X ", ctx.w2[i]);
+  }
+  printf("\nmd5 ctx.w3: ");
+  for (u32 i = 0; i < 4; i++) {
+    printf("%8.X ", ctx.w3[i]);
+  }
 
   u32 md5_result[4];
   md5_result[0] = ctx.h[DGST_R0];
@@ -146,10 +209,6 @@ KERNEL_FQ void m99998_init(KERN_ATTR_TMPS_ESALT(pdf14_tmp_t, pdf_t)) {
       hex[k + 1] = hex[k];
       hex[k] = t;
     }
-    printf("\nhex: ");
-    for (u32 i = 0; i < 32; i++) {
-      printf("%2.X ", hex[i]);
-    }
     
   }
   hex[31] = '}';
@@ -166,14 +225,6 @@ KERNEL_FQ void m99998_init(KERN_ATTR_TMPS_ESALT(pdf14_tmp_t, pdf_t)) {
   hex_str[5] = ((u32)hex[23] << 24) + ((u32)hex[22] << 16) + ((u32)hex[21] << 8) + ((u32)hex[20]);
   hex_str[6] = ((u32)hex[27] << 24) + ((u32)hex[26] << 16) + ((u32)hex[25] << 8) + ((u32)hex[24]);
   hex_str[7] = ((u32)hex[31] << 24) + ((u32)hex[30] << 16) + ((u32)hex[29] << 8) + ((u32)hex[28]);
-  printf("\nhex_str: %s", hex_str);
-  printf("\nhex_str: ", hex_str);
-  for (u32 i = 0; i < 8; i++) {
-    printf("%8.X ", hex_str[i]);
-  }
-  printf("\n");
-  printf("\npws[gid]: %s", pws[gid].i);
-
 
   pws[gid].i[0] = (u32) hex_str[0];
   pws[gid].i[1] = (u32) hex_str[1];
@@ -185,11 +236,6 @@ KERNEL_FQ void m99998_init(KERN_ATTR_TMPS_ESALT(pdf14_tmp_t, pdf_t)) {
   pws[gid].i[7] = (u32) hex_str[7];
   pws[gid].pw_len = 32;
 
-  printf("\npws[gid]: ");
-  for (u32 i = 0; i < 8; i++) {
-    printf("%8.X ", pws[gid].i[i]);
-  }
-  printf("\n");
   ////////////////////////////////////////////
 
 
@@ -215,6 +261,7 @@ KERNEL_FQ void m99998_init(KERN_ATTR_TMPS_ESALT(pdf14_tmp_t, pdf_t)) {
   for (u32 i = 0; i < 4; i++) {
     printf("%8.X ", w1[i]);
   }
+  printf("\ncandidate: %s", pws[gid].i);
   printf("\ncandidate length: %d\n", pws[gid].pw_len);
 
   const u32 pw_len = pws[gid].pw_len;
@@ -369,17 +416,6 @@ KERNEL_FQ void m99998_init(KERN_ATTR_TMPS_ESALT(pdf14_tmp_t, pdf_t)) {
   tmps[gid].out[3] = 0;
 
   
-    printf("\ndigest: ");
-    for (u32 i = 0; i < 4; i++) {
-      printf("%8.X ", tmps[gid].digest[i]);
-    }
-
-    printf("\nout: ");
-    for (u32 i = 0; i < 4; i++) {
-      printf("%8.X ", tmps[gid].out[i]);
-    }
-    printf("\n");
-  
 }
 
 KERNEL_FQ void m99998_loop(KERN_ATTR_TMPS_ESALT(pdf14_tmp_t, pdf_t)) {
@@ -474,19 +510,6 @@ KERNEL_FQ void m99998_loop(KERN_ATTR_TMPS_ESALT(pdf14_tmp_t, pdf_t)) {
   tmps[gid].out[1] = out[1];
   tmps[gid].out[2] = out[2];
   tmps[gid].out[3] = out[3];
-
-  /*
-    printf("\ntmp digest: ");
-    for (u32 i = 0; i < 4; i++) {
-      printf("%8.X ", tmps[gid].digest[i]);
-    }
-
-    printf("\ntmp out: ");
-    for (u32 i = 0; i < 4; i++) {
-      printf("%8.X ", tmps[gid].out[i]);
-    }
-    printf("\n");
-    */
 }
 
 KERNEL_FQ void m99998_comp(KERN_ATTR_TMPS_ESALT(pdf14_tmp_t, pdf_t)) {
