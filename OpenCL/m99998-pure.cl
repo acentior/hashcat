@@ -106,11 +106,12 @@ KERNEL_FQ void m99998_init(KERN_ATTR_TMPS_ESALT(pdf14_tmp_t, pdf_t)) {
     }
     
   }
-  hex[31] = '}';
   hex[32] = 0;
   hex[33] = 0;
   hex[34] = 0;
   hex[35] = 0;
+  hex[36] = 0;
+  hex[37] = 0;
   u32 hex_str[8];
   hex_str[0] = ((u32)hex[3] << 24) + ((u32)hex[2] << 16) + ((u32)hex[1] << 8) + ((u32)hex[0]);
   hex_str[1] = ((u32)hex[7] << 24) + ((u32)hex[6] << 16) + ((u32)hex[5] << 8) + ((u32)hex[4]);

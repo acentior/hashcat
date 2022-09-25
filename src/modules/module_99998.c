@@ -25,8 +25,8 @@ static const u64 OPTS_TYPE = OPTS_TYPE_STOCK_MODULE | OPTS_TYPE_PT_GENERATE_LE;
 static const u32 SALT_TYPE = SALT_TYPE_EMBEDDED;
 // static const char *ST_PASS = "hashcat";
 // static const char *ST_HASH = "$pdf$2*3*128*-4*1*16*62888255846156252261477183186121*32*6879919b1afd520bd3b7dbcc0868a0a500000000000000000000000000000000*32*0000000000000000000000000000000000000000000000000000000000000000";
-static const char *ST_PASS = "3du4rdKh1l1934";
-static const char *ST_HASH = "$pdf$4*4*128*-1060*1*16*979e4bd5fcfb0849a3538f80c3b55131*32*b668cbeb03d637a6ff048f1719fb88df00000000000000000000000000000000*32*cc5dd907cd664a0294ca788724f02b856ccadbc65a803b1b17bcbc6af154898f";
+static const char *ST_PASS = "kerk0p3s";
+static const char *ST_HASH = "$pdf$4*4*128*-4*1*16*12c27c19675e7bbe1b4cf39c8f97259d*32*e843258e59132d855ed66f8189f5608d00000000000000000000000000000000*32*36740ffc06d9a2fe9e302c9a3c4c5b3e5ca83894e709ebd3d45f5122492f174b";
 
 u32 module_attack_exec(MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return ATTACK_EXEC; }
 u32 module_dgst_pos0(MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra) { return DGST_POS0; }
